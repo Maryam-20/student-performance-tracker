@@ -1,0 +1,25 @@
+<!-- filepath: c:\performance_tracker\gradeSystem\gradeSystem\template\registration\signup.html -->
+{% extends "common.html" %}
+{% block content %}
+{% load bootstrap_tags %}
+
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-8 col-lg-6">
+      <div class="card shadow-lg border-0">
+        <div class="card-header bg-primary text-white text-center">
+          <h2 class="form-title mb-0">Registration Portal</h2>
+        </div>
+        <div class="card-body">
+          <form method="post" novalidate>
+            {% csrf_token %}
+            {{ form|as_bootstrap }}
+            <button type="submit" class="btn btn-primary btn-block w-100 mt-3">Register</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock content %}
