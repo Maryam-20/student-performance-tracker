@@ -52,10 +52,20 @@
   <div class="hero-section">
     <h1>Welcome to Children International School</h1>
     <p>Empowering students through excellence in education and innovation.</p>
-    {% if request.resolver_match.url_name != 'signup' and request.resolver_match.url_name != 'login' and request.alluser.is_authenticated %}
-      <a href="{% url 'signup' %}" class="btn btn-primary btn-custom">Register</a>
-      <a href="{% url 'login' %}" class="btn btn-outline-light btn-custom">Login</a>
+    {% if request.resolver_match.url_name != 'signup' and request.resolver_match.url_name != 'login' and request.resolver_match.url_name != 'password_reset' and request.resolver_match.url_name != 'password_reset_done' and request.resolver_match.url_name != 'password_reset_confirm' and request.resolver_match.url_name != 'password_reset_complete' %}
+      {% if request.user.is_authenticated %}
+        <!-- Show Logout Button -->
+        <form id="logout-form" method="post" action="{% url 'logout' %}">
+          {% csrf_token %}
+          <button type="submit" class="btn btn-primary ml-lg-3">Logout</button>
+        </form>
+      {% else %}
+        <!-- Show Register and Login Buttons -->
+        <a href="{% url 'signup' %}" class="btn btn-primary btn-custom">Register</a>
+        <a href="{% url 'login' %}" class="btn btn-outline-light btn-custom">Login</a>
+      {% endif %}
     {% endif %}
+    
   </div>
 
 {% block content %}

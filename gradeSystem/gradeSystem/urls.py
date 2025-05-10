@@ -16,7 +16,8 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from gradeSystem.authapp.views import SignupView
+from gradeSystem.authapp.views import SignupView, CustomLogoutView
+from django.contrib.auth.views import LogoutView
 from django.views.generic import TemplateView
 
 base_url = 'school-portal/v1'
@@ -26,6 +27,7 @@ urlpatterns = [
     path(f'{base_url}auth/', include('gradeSystem.authapp.urls')),
     path(f'{base_url}/auth/', include('django.contrib.auth.urls')),
     path(f'{base_url}/auth/register/$',SignupView.as_view(), name='signup'),
+    path(f'{base_url}/auth/logout/', CustomLogoutView.as_view(), name='logout'),
     # path(f'{base_url}/auth/login/$', SignupView.as_view(), name='login'),
     path(f'{base_url}/home/', TemplateView.as_view(template_name='index.html'), name='home'),
 ]

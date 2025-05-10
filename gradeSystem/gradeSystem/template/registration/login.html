@@ -9,12 +9,13 @@
       <div class="card shadow-lg border-0">
         <div class="card-header bg-primary text-white text-center">
           <h2 class="form-title mb-0">Login</h2>
-          <p class="mb-0">Welcome back to Children International School</p>
+          <!-- <p class="mb-0">Welcome back to Children International School</p> -->
         </div>
         <div class="card-body">
           <form method="post" novalidate>
             {% csrf_token %}
             {{ form|as_bootstrap }}
+            <p class="mb-0">Forget Password? <a href="{% url 'password_reset' %}">Reset Password</a></p>
             <button type="submit" class="btn btn-primary btn-block w-100 mt-3">Login</button>
           </form>
         </div>
