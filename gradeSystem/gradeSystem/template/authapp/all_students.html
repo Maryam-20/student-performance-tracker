@@ -1,0 +1,81 @@
+<!-- filepath: c:\performance_tracker\gradeSystem\gradeSystem\template\authapp\all_students.html -->
+{% extends "common.html" %}
+{% block title %}All Students{% endblock title %}
+{% block content %}
+
+<style>
+    .search-bar {
+      margin-bottom: 20px;
+    }
+  
+    .table-container {
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+    }
+  
+    .table th {
+      background-color: #007bff;
+      color: white;
+      text-align: center;
+    }
+  
+    .table td {
+      text-align: center;
+    }
+  
+    .no-results {
+      text-align: center;
+      font-size: 1.2rem;
+      color: #555;
+      margin-top: 20px;
+    }
+  </style>
+
+<div class="container mt-5">
+  <h1 class="text-center mb-4">All Students</h1>
+
+  <!-- Search Bar -->
+  <form method="get" action="{% url 'all_students_search' %}" class="search-bar">
+    <div class="input-group">
+      <input type="text" name="search" class="form-control" placeholder="Search by class..." value="{{ search_query }}">
+      <button class="btn btn-primary" type="submit">Search</button>
+    </div>
+  </form>
+
+  <!-- Students Table -->
+  <div class="table-container">
+    {% if search_query and not students %}
+      <p class="no-results">No students found for "{{ search_query }}".</p>
+    {% endif %}
+
+    <table class="table table-bordered table-hover">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Full Name</th>
+          <th>Gender</th>
+          <th>Class</th>
+          <th>Phone Number</th>
+          <th>Address</th>
+          <th>Date of Birth</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for student in students %}
+          <tr>
+            <td>{{ forloop.counter }}</td>
+            <td>{{ student.full_name }}</td>
+            <td>{{ student.gender }}</td>
+            <td>{{ student.class_name }}</td>
+            <td>{{ student.phone_number|default:"N/A" }}</td>
+            <td>{{ student.address|default:"N/A" }}</td>
+            <td>{{ student.date_of_birth|date:"F j, Y" }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock content %}

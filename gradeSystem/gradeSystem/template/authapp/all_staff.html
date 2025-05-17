@@ -1,0 +1,78 @@
+<!-- filepath: c:\performance_tracker\gradeSystem\gradeSystem\template\authapp\all_staff.html -->
+{% extends "common.html" %}
+{% block title %}All Staff{% endblock title %}
+{% block content %}
+<style>
+  .search-bar {
+    margin-bottom: 20px;
+  }
+
+  .table-container {
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+  }
+
+  .table th {
+    background-color: #007bff;
+    color: white;
+    text-align: center;
+  }
+
+  .table td {
+    text-align: center;
+  }
+
+  .no-results {
+    text-align: center;
+    font-size: 1.2rem;
+    color: #555;
+    margin-top: 20px;
+  }
+</style>
+
+<div class="container mt-5">
+  <h1 class="text-center mb-4">All Staff</h1>
+
+  <!-- Search Bar -->
+  <form method="get" action="{% url 'all_staff_search' %}" class="search-bar">
+    <div class="input-group">
+      <input type="text" name="search" class="form-control" placeholder="Search by role..." value="{{ request.GET.search }}">
+      <button class="btn btn-primary" type="submit">Search</button>
+    </div>
+  </form>
+
+  <!-- Staff Table -->
+  <div class="table-container">
+    {% if staff %}
+      <table class="table table-bordered table-hover">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Full Name</th>
+            <th>Role</th>
+            <th>Phone Number</th>
+            <th>Email</th>
+            <th>Address</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for member in staff %}
+            <tr>
+              <td>{{ forloop.counter }}</td>
+              <td>{{ member.full_name }}</td>
+              <td>{{ member.position }}</td>
+              <td>{{ member.phone_number|default:"N/A" }}</td>
+              <td>{{ member.email|default:"N/A" }}</td>
+              <td>{{ member.address|default:"N/A" }}</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    {% else %}
+      <p class="no-results">No staff members found for the role "{{ request.GET.search }}".</p>
+    {% endif %}
+  </div>
+</div>
+{% endblock content %}

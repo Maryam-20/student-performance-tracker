@@ -111,9 +111,9 @@
     {% if request.user.is_authenticated %}
     <div class="offcanvas-body">
       <a href="{% url 'my_profile' request.user.id %}" class="btn btn-primary w-100 mb-2">My Profile</a>
-      <a href="#" class="btn btn-primary w-100 mb-2">All Students</a>
-      <a href="#" class="btn btn-primary w-100 mb-2">All Staff</a>
-      <a href="#" class="btn btn-primary w-100 mb-2">All Teachers</a>
+      <a href="{% url "all_students" %}" class="btn btn-primary w-100 mb-2">All Students</a>
+      <a href="{% url "all_staff" %}" class="btn btn-primary w-100 mb-2">All Staff</a>
+      <a href="{% url "all_teachers" %}" class="btn btn-primary w-100 mb-2">All Teachers</a>
       <a href="{% url 'password_change' %}" class="btn btn-primary w-100 mb-3">Change Password</a>
       <form id="logout-form" method="post" action="{% url 'logout' %}">
         {% csrf_token %}

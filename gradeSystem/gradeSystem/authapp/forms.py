@@ -26,3 +26,12 @@ class SignUpForm(UserCreationForm):
         if commit:
             user.save()
         return user
+
+
+class EditProfileForm(forms.ModelForm):
+    class Meta:
+        model = AllUser
+        fields = ['first_name', 'last_name', 'email']
+        widgets = {
+            'email': forms.EmailInput(attrs={'autofocus': True}),
+        }
