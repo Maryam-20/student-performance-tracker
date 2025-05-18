@@ -8,7 +8,7 @@ gender_choices = (("Male", "Male"),
                   ("Female", "Female"),)
 
 
-class_choices = (("Year 7", "Year 7"),
+grade_level_choices = (("Year 7", "Year 7"),
                  ("Year 8", "Year 8"),
                  ("Year 9", "Year 9"),
                  ("Year 10", "Year 10"),
@@ -17,13 +17,10 @@ class_choices = (("Year 7", "Year 7"),
                  )
 
 subject_choices = (("Mathematics", "Mathematics"),
-                   ("ICT", "ICT"),
-                   ("English", "English"),
+                     ("English Language", "English Language"),
                    ("History", "History"),
                    ("Geography", "Geography"),
                    ("Computer Science", "Computer Science"),
-                   ("Physical Education", "Physical Education"),
-                   ("Art", "Art"),
                    ("Music", "Music"),
                    ("Economics", "Economics"),
                    ("Psychology", "Psychology"),
@@ -36,7 +33,16 @@ subject_choices = (("Mathematics", "Mathematics"),
                    ("Physics", "Physics"),
                    ("Biology", "Biology"),
                    ("Literature", "Literature"),
+                   ("Government", "Government"),
+                   ("Civic Education", "Civic Education"),
+                   ("Agricultural Science", "Agricultural Science"),
+                   ("Technical Drawing", "Technical Drawing"),
+                   ("Fine Arts", "Fine Arts"),
+                   ("Physical and Health Education", "Physical and Health Education"),
+                   ("Home Economics", "Home Economics"),
+                   ("Food and Nutrition", "Food and Nutrition"),
                    ("Foreign Language", "Foreign Language"),)
+
 
 position_choices = (("Head of School", "Heaad of School"),
                     ("Ass Head of School", "Ass Head of School"),
@@ -97,7 +103,8 @@ class Student(models.Model):
     user = models.OneToOneField(AllUser, on_delete=models.CASCADE, null=True, blank=True)  
     full_name = models.CharField(max_length=200, null=False, blank=False)
     gender = models.CharField(choices=gender_choices, max_length=10, null=False, blank=False)
-    class_name = models.CharField(choices=class_choices, max_length=50, null=True, blank=False)
+    grade_level = models.CharField(choices=grade_level_choices, max_length=50, null=True, blank=False) #Current grade level
+    class_name = models.CharField(max_length=50, null=True, blank=False) #Current class
     phone_number = models.CharField(max_length=15, null=True, blank=True)
     address = models.CharField(max_length=200, null=True, blank=True)
     date_of_birth = models.DateField(null=True, blank=True)
@@ -149,7 +156,7 @@ class Teacher(models.Model):
     phone_number = models.CharField(max_length=15, null=True, blank=True)
     subject_taught = models.CharField(choices=subject_choices, max_length=100, null=True)
     date_of_birth = models.DateField()
-    class_teacher = models.CharField(choices=class_choices, max_length=50, null=True)
+    class_teacher = models.CharField(max_length=50, null=True)
     # email = models.EmailField(unique=True)
     # password = models.CharField(max_length=10)
     # is_active = models.BooleanField(default=True)

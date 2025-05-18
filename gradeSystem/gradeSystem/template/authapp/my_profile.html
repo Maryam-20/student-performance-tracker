@@ -132,7 +132,10 @@
             <h5>Student ID</h5>
             <p>CIS-STU0{{ st.user_id|default:"Not specified" }}</p>
 
-            <h5>Class</h5>
+            <h5>Grade Level</h5>
+            <p>{{ st.grade_level|default:"Not specified" }}</p>
+
+            <h5>Current Class</h5>
             <p>{{ st.class_name|default:"Not specified" }}</p>
 
             <h5>Gender</h5>

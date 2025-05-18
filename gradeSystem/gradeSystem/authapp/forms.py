@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
-from .models import AllUser
+from .models import *
 
 class SignUpForm(UserCreationForm):
     first_name = forms.CharField(max_length=30, required=False)
@@ -28,10 +28,18 @@ class SignUpForm(UserCreationForm):
         return user
 
 
-class EditProfileForm(forms.ModelForm):
-    class Meta:
-        model = AllUser
-        fields = ['first_name', 'last_name', 'email']
-        widgets = {
-            'email': forms.EmailInput(attrs={'autofocus': True}),
-        }
+# class EditStudentProfileForm(forms.ModelForm):
+#     class Meta:
+#         model = Student
+#         fields = ['first_name', 'last_name', 'email']
+#         widgets = {
+#             'email': forms.EmailInput(attrs={'autofocus': True}),
+#         }
+        
+# class EditStaffProfileForm(forms.ModelForm):
+#     class Meta:
+#         model = Staff
+#         fields = ['first_name', 'last_name', 'email']
+#         widgets = {
+#             'email': forms.EmailInput(attrs={'autofocus': True}),
+#         }
