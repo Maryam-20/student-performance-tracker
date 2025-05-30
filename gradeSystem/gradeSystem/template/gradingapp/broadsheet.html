@@ -1,0 +1,88 @@
+{% extends "common.html" %}
+{% block title %}Broadsheet{% endblock title %}
+{% block content %}
+<div class="container mt-5">
+  <h1 class="text-center">Broadsheet</h1>
+
+  <!-- Filter Form -->
+  <form method="get" class="mb-4">
+    <div class="row">
+      <div class="col-md-3">
+        <select name="class_name" class="form-control">
+          <option value="">Select Class</option>
+          {% for class_name in classes %}
+          <option value="{{ class_name.id }}" {% if class_name.id|stringformat:"s" == request.GET.class_name %}selected{% endif %}>
+            {{ class_name.class_name }}
+          </option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="col-md-3">
+        <select name="term" class="form-control">
+          <option value="">Select Term</option>
+          {% for term in terms %}
+          <option value="{{ term.id }}" {% if term.id|stringformat:"s" == request.GET.term %}selected{% endif %}>
+            {{ term.term_name }}
+          </option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="col-md-3">
+        <select name="session" class="form-control">
+          <option value="">Select Session</option>
+          {% for session in sessions %}
+          <option value="{{ session.id }}" {% if session.id|stringformat:"s" == request.GET.session %}selected{% endif %}>
+            {{ session.session_name }}
+          </option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="col-md-3">
+        <select name="subject" class="form-control">
+          <option value="">Select Subject</option>
+          {% for subject in subjects %}
+          <option value="{{ subject.id }}" {% if subject.id|stringformat:"s" == request.GET.subject %}selected{% endif %}>
+            {{ subject.subject_name }}
+          </option>
+          {% endfor %}
+        </select>
+      </div>
+    </div>
+    <div class="text-center mt-3">
+      <button type="submit" class="btn btn-primary">Filter</button>
+    </div>
+  </form>
+
+  <!-- Scores Table -->
+  <table class="table table-bordered table-hover">
+    <thead class="thead-dark">
+      <tr>
+        <th>#</th>
+        <th>Student Name</th>
+        <th>First CA</th>
+        <th>Second CA</th>
+        <th>Total CA</th>
+        <th>Exam Score</th>
+        <th>Total Score</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for score in scores %}
+      <tr>
+        <td>{{ forloop.counter }}</td>
+        <td>{{ score.student.full_name }}</td>
+        <td>{{ score.first_ca|default:"-" }}</td>
+        <td>{{ score.second_ca|default:"-" }}</td>
+        <td>{{ score.total_ca|default:"-" }}</td>
+        <td>{{ score.exam_score|default:"-" }}</td>
+        <td>{{ score.total_score|default:"-" }}</td>
+      </tr>
+      {% empty %}
+      <tr>
+        <td colspan="6" class="text-center">No scores found.</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock content %}

@@ -27,7 +27,8 @@ class ClassesAdmin(admin.ModelAdmin):
     
 @admin.register(JnrClasses)
 class JnrClassesAdmin(admin.ModelAdmin):
-    list_display = ('class_name', 'class_teacher', 'no_of_students', 'session', 'term', 'subjects_offered', 'no_of_subjects_offered', 'date_created')
+    list_display = ('class_name', 'no_of_students', 'no_of_subjects_offered', 'session', 'term')
+    filter_horizontal = ('subjects_offered',)  # Enable a multi-select widget for subjects
     search_fields = ('class_name', 'class_teacher__full_name')
     list_filter = ('session', 'term')
     ordering = ('-date_created',)
@@ -43,11 +44,17 @@ class SnrClassesAdmin(admin.ModelAdmin):
     
 @admin.register(Subjects)
 class SubjectsAdmin(admin.ModelAdmin):
-    list_display = ('subject_name', 'class_name', 'term', 'session')
-    search_fields = ('subject_name', 'class_name__class_name', 'term__term_name', 'session__session_name')
-    list_filter = ('class_name', 'term', 'session')
-    ordering = ('-session__start_date',)
+    list_display = ('subject_name',  'session', 'term', 'date_created')
+    search_fields = ('subject_name',)
+    list_filter = ('session', 'term', 'teachers')
     list_per_page = 20
+
+
+@admin.register(SubjectTeacherAssignment)
+class SubjectTeacherAssignmentAdmin(admin.ModelAdmin):
+    list_display = ('subject', 'teacher', 'class_name', 'session', 'term', 'date_assigned')
+    search_fields = ('subject__subject_name', 'teacher__full_name', 'class_name__class_name')
+    list_filter = ('session', 'term', 'subject')
     
 @admin.register(SubjectScore)
 class SubjectScoreAdmin(admin.ModelAdmin):

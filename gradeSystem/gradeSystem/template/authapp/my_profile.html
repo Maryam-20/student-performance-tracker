@@ -102,76 +102,72 @@
   <!-- Profile Header -->
   <div class="profile-header">
     <img src="{% static 'images/default_avatar.png' %}" alt="User Avatar">
-    <h2>{{ user.get_full_name }}</h2>
-    <p>{{ user.email }}</p>
+    <h2>{{ profile_user.get_full_name }}</h2>
+    <p>{{ profile_user.email }}</p>
   </div>
 
   <!-- Profile Body -->
    <!-- Asst Head of School or Superuser Authorization to edit Staff and Student Profile -->
-    {% if staff %}
-    {% for stf in staff  %}
-    {% if request.user.is_superuser or stf.position == "Ass Head of School" %}
+    <!-- {% if staff %}
+    
+    {% if request.user.is_superuser or staff.position == "Ass Head of School" %}
     <div class="profile-body">
         <div class="edit-btn">
         <a href="#" class="btn btn-outline-primary btn-sm">Edit Profile</a>
     </div>
     {% endif %}
-    {% endfor %}
-    {% endif %}
+    
+    {% endif %} -->
 
     <div class="row">
       <!-- Personal Information -->
 
       <!-- Student Information -->
        {% if student %}
-       {% for st in student  %}
       <div class="col-md-6">
         <div class="card">
           <div class="card-header">Student Information</div>
           <div class="card-body">
             <h5>Student ID</h5>
-            <p>CIS-STU0{{ st.user_id|default:"Not specified" }}</p>
+            <p>CIS-STU0{{ student.user_id|default:"Not specified" }}</p>
 
             <h5>Grade Level</h5>
-            <p>{{ st.grade_level|default:"Not specified" }}</p>
+            <p>{{ student.grade_level|default:"Not specified" }}</p>
 
             <h5>Current Class</h5>
-            <p>{{ st.class_name|default:"Not specified" }}</p>
+            <p>{{ student.class_name|default:"Not specified" }}</p>
 
             <h5>Gender</h5>
-            <p>{{ st.gender|default:"Not specified" }}</p>
+            <p>{{ student.gender|default:"Not specified" }}</p>
 
             <h5>Date of Birth</h5>
-            <p>{{ st.date_of_birth|date:"F j, Y"|default:"Not specified" }}</p>
+            <p>{{ student.date_of_birth|date:"F j, Y"|default:"Not specified" }}</p>
             
           </div>
         </div>
       </div>
-      {% endfor %}
       {% endif %}   
 
         <!-- Staff Information -->
       {% if staff %}
-      {% for stf in staff  %}
       <div class="col-md-6">
         <div class="card">
           <div class="card-header">Staff Information</div>
           <div class="card-body">
             <h5>Staff ID</h5>
-            <p>CIS-STF0{{ stf.id|default:"Not specified" }}</p>
+            <p>CIS-STF0{{ staff.user_id|default:"Not specified" }}</p>
 
             <h5>Role</h5>
-            <p>{{ stf.position|default:"Not specified" }}</p>
+            <p>{{ staff.position|default:"Not specified" }}</p>
 
             <h5>Gender</h5>
-            <p>{{ stf.gender|default:"Not specified" }}</p>
+            <p>{{ staff.gender|default:"Not specified" }}</p>
 
             <h5>Phone</h5>
-            <p>{{ stf.phone_number|default:"Not provided" }}</p>
+            <p>{{ staff.phone_number|default:"Not provided" }}</p>
           </div>
         </div>
       </div>
-      {% endfor %}
       {% endif %}
 
       <!-- Additional Information -->
@@ -182,43 +178,38 @@
 
             <!-- Student Information -->
             {% if student %}
-            {%for st in student  %}
             <h5>Phone</h5>
-            <p>{{ st.phone_number|default:"Not provided" }}</p>
+            <p>{{ student.phone_number|default:"Not provided" }}</p>
 
             <h5>Registered</h5>
-            <p>{{ user.date_joined|date:"F j, Y" }}</p>
+            <p>{{ Profile_user.date_joined|date:"F j, Y" }}</p>
 
             <h5>Role</h5>
-            <p>{{ st.role|default:"Student" }}</p>
+            <p>Student</p>
 
             <h5>Address</h5>
-            <p>{{ st.address|default:"Not available" }}</p>
-            {% endfor %}
+            <p>{{ student.address|default:"Not available" }}</p>
             {% endif %}
 
             <!-- Staff Information -->
             {% if staff %}
-            {% for stf in staff  %}
             <h5>Address</h5>
-            <p>{{ stf.address|default:"CHEMISTRY" }}</p>
+            <p>{{ staff.address|default:"NOT SPECIFIED" }}</p>
 
             <h5>Registered</h5>
-            <p>{{ user.date_joined|date:"F j, Y" }}</p>
+            <p>{{ profile_user.date_joined|date:"F j, Y" }}</p>
 
             <h5>Date of Birth</h5>
-            <p>{{ stf.date_of_birth|date:"F j, Y"|default:"Not specified" }}</p>
-            {% endfor %}
+            <p>{{ staff.date_of_birth|date:"F j, Y"|default:"Not specified" }}</p>
+           
             {% endif %}
 
-            {% if staff and teacher %}
-            {% for tch in teacher  %}
+            {% if teacher %}
             <h5>SUBJECT TEACHER</h5>
-            <p>{{ tch.subject_taught|default:"CHEMISTRY" }}</p>
+            <p>{{ teacher.subject_taught|default:"Not Assigned" }}</p>
 
             <h5>CLASS TEACHER</h5>
-            <p>{{ tch.class_teacher|default:"Year 7" }}</p>
-            {% endfor %}
+            <p>{{ teacher.class_teacher|default:"Not Assigned" }}</p>
             {% endif %}
           </div>
         </div>

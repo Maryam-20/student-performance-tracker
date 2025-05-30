@@ -1,0 +1,39 @@
+{% extends "common.html" %}
+{% block title %}Student Dashboard{% endblock title %}
+{% block content %}
+<div class="container mt-5">
+  <h1 class="text-center">Welcome, {{ request.user.get_full_name }}</h1>
+  <h3 class="text-center">Your Dashboard</h3>
+
+  <!-- Student Information -->
+  <div class="card mt-4">
+    <div class="card-body">
+      <h5 class="card-title">Student Information</h5>
+      <p><strong>Full Name:</strong> {{ request.user.get_full_name }}</p>
+      <p><strong>Class:</strong> {{ student.class_name.class_name }}</p>
+      <p><strong>Session:</strong> 
+        {% if student_results|length > 0 %}
+          {{ student_results.0.session.session_name }}
+        {% else %}
+          N/A
+        {% endif %}
+      </p>
+      <p><strong>Term:</strong> 
+        {% if student_results|length > 0 %}
+          {{ student_results.0.term.term_name }}
+        {% else %}
+          N/A
+        {% endif %}
+      </p>
+    </div>
+  </div>
+
+  <!-- Buttons for Results and Scores -->
+  <div class="mt-4 text-center">
+    <a href="{% url 'check_results' %}" class="btn btn-primary">Check Results</a>
+    <a href="{% url 'check_scores' %}" class="btn btn-secondary">Check Scores</a>
+  </div>
+</div>
+{% endblock content %}
+  
+  

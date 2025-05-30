@@ -56,10 +56,15 @@
           <th>#</th>
           <th>Full Name</th>
           <th>Gender</th>
+          <th>Grade Level</th>
           <th>Class</th>
           <th>Phone Number</th>
           <th>Address</th>
           <th>Date of Birth</th>
+          <th>Profile</th>
+          {% if request.user.is_superuser or staff.is_teacher or staff.position == "Head of School" or staff.position == "Ass Head of School"  %}
+          <th>Update Student Information</th>
+          {% endif %}
         </tr>
       </thead>
       <tbody>
@@ -68,10 +73,15 @@
             <td>{{ forloop.counter }}</td>
             <td>{{ student.full_name }}</td>
             <td>{{ student.gender }}</td>
+            <td>{{ student.grade_level }}</td>
             <td>{{ student.class_name }}</td>
             <td>{{ student.phone_number|default:"N/A" }}</td>
             <td>{{ student.address|default:"N/A" }}</td>
             <td>{{ student.date_of_birth|date:"F j, Y" }}</td>
+            <td><a href="{% url "my_profile" student.user.id %}">Profile</a></td>
+            {% if request.user.is_superuser or staff.is_teacher or staff.position == "Head of School" or staff.position == "Ass Head of School" %}
+            <td><a href="{% url "edit_student" student.id %}">Edit</a></td>
+            {% endif %}
           </tr>
         {% endfor %}
       </tbody>

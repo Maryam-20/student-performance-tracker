@@ -55,6 +55,10 @@
             <th>Phone Number</th>
             <th>Email</th>
             <th>Address</th>
+            <th>Profile</th>
+            {% if request.user.is_superuser or staff.position == "Head of School" %}
+            <th>Update Information</th>
+            {% endif %}
           </tr>
         </thead>
         <tbody>
@@ -64,8 +68,12 @@
               <td>{{ member.full_name }}</td>
               <td>{{ member.position }}</td>
               <td>{{ member.phone_number|default:"N/A" }}</td>
-              <td>{{ member.email|default:"N/A" }}</td>
+              <td>{{ member.user.email|default:"N/A" }}</td>
               <td>{{ member.address|default:"N/A" }}</td>
+              <td><a href="{% url "my_profile" member.user.id %}">Profile</a></td>
+              {% if request.user.is_superuser or staff.position == "Head of School" %}
+              <td><a href="{% url "edit_staff_or_teacher" member.id %}">Edit</a></td>
+              {% endif %}
             </tr>
           {% endfor %}
         </tbody>

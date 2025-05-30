@@ -56,7 +56,7 @@
   
       <!-- Brand -->
       <a class="navbar-brand text-primary fw-bold" href="{% url 'home' %}">
-        Children International School
+        Children's International School
       </a>
   
       <!-- Toggler for Mobile View -->
@@ -70,15 +70,31 @@
           <li class="nav-item">
             <a class="nav-link text-dark" href="{% url 'home' %}">Home</a>
           </li>
+
   
           {% if request.user.is_authenticated %}
+          <li class="nav-item">
+            <a class="nav-link text-dark" href="{% url 'my_profile' request.user.id %}">Profile</a>
+          </li>
+            {% if request.user.is_staff == 0 %}
+          <li class="nav-item">
+            <a class="nav-link text-dark" href="{% url 'student_dashboard' %}">My Result</a>
+          </li>
+          {% endif %}
+          <li>
+            <form id="logout-form" method="post" action="{% url 'logout' %}" style="margin-bottom: 50px;">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-link nav-link text-dark" style="border: none; background: none; padding: 0; margin-top: 8px; ">Logout</button>
+            </form>
+          </li>
             <!-- Dropdown for Authenticated Users -->
-            <li class="nav-item dropdown">
+            {% comment %} <li class="nav-item dropdown">
               <a class="nav-link dropdown-toggle text-dark" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                 My Account
               </a>
               <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
                 <li><a class="dropdown-item" href="{% url 'my_profile' request.user.id %}">My Profile</a></li>
+                <li><a class="dropdown-item" href="{% url 'student_dashboard' %}">Result Dashboard</a></li>
                 <li><a class="dropdown-item" href="{% url 'password_change' %}">Change Password</a></li>
                 <li>
                   <form id="logout-form" method="post" action="{% url 'logout' %}">
@@ -87,7 +103,7 @@
                   </form>
                 </li>
               </ul>
-            </li>
+            </li> {% endcomment %}
           {% else %}
             <!-- Links for Unauthenticated Users -->
             <li class="nav-item">
@@ -111,9 +127,12 @@
     {% if request.user.is_authenticated %}
     <div class="offcanvas-body">
       <a href="{% url 'my_profile' request.user.id %}" class="btn btn-primary w-100 mb-2">My Profile</a>
+      {% if request.user.is_superuser %}
       <a href="{% url "all_students" %}" class="btn btn-primary w-100 mb-2">All Students</a>
       <a href="{% url "all_staff" %}" class="btn btn-primary w-100 mb-2">All Staff</a>
       <a href="{% url "all_teachers" %}" class="btn btn-primary w-100 mb-2">All Teachers</a>
+      {% endif %}
+      <a href="{% url "teacher_dashboard" %}" class="btn btn-primary w-100 mb-2">Teacher's Dashboard</a>
       <a href="{% url 'password_change' %}" class="btn btn-primary w-100 mb-3">Change Password</a>
       <form id="logout-form" method="post" action="{% url 'logout' %}">
         {% csrf_token %}
@@ -125,11 +144,14 @@
   
   <!-- Hero Banner -->
   <div class="hero-section">
-    <h1>Welcome to Children International School</h1>
+    <h1>Welcome to Children's International School</h1>
     <p>Empowering students through excellence in education and innovation.</p>
-    
+    <div class="current-session-term">
+      <p>Academic Session: {{ current_session.session_name }}</p>
+      <p>Term: {{ current_term.term_name }}</p>
+    </div>
   </div>
-
+  
 {% block content %}
 
 {% endblock content %}

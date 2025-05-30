@@ -44,8 +44,8 @@ class Term(models.Model):
 
 
 class Classes(models.Model):
-    class_name = models.CharField(max_length=50, unique=True, db_index=True)
-    class_teacher = models.ForeignKey(Teacher, on_delete=models.CASCADE, null=True, blank=True, db_index=True)
+    class_name = models.CharField(max_length=50, unique=True, db_index=True) #THIS SHOULDN'T BE UNIQUE
+    class_teacher = models.ForeignKey('authapp.Teacher', on_delete=models.CASCADE, null=True, blank=True, db_index=True)
     no_of_students = models.IntegerField(default=0)
     session = models.ForeignKey(AcademicSession, on_delete=models.CASCADE, null=True, blank=True)
     term = models.ForeignKey(Term, on_delete=models.CASCADE, null=True, blank=True)
@@ -57,9 +57,16 @@ class Classes(models.Model):
 
 
 class JnrClasses(Classes):
-    subjects_offered = models.CharField(max_length=500, null=True, blank=True)
+    subjects_offered = models.ManyToManyField('Subjects', related_name='jnr_classes', blank=True)
     no_of_subjects_offered = models.IntegerField(default=0)
 
+    def save(self, *args, **kwargs):
+        # Save the instance first to ensure it has a primary key
+        super().save(*args, **kwargs)
+        # Update the number of subjects offered
+        self.no_of_subjects_offered = self.subjects_offered.count()
+        # Save again to persist the updated field
+        super().save(update_fields=['no_of_subjects_offered'])
 
 class SnrClasses(Classes):
     department = models.CharField(choices=Department_choices, max_length=50, null=True, blank=True)
@@ -68,6 +75,10 @@ class SnrClasses(Classes):
     
         
 class Subjects(models.Model):
+    
+    """ 
+    Table to declare the subjects the school offer 
+    """
     subject_choices = (("Mathematics", "Mathematics"),
                      ("English Language", "English Language"),
                    ("History", "History"),
@@ -96,18 +107,37 @@ class Subjects(models.Model):
                    ("Foreign Language", "Foreign Language"),)
     
     subject_name = models.CharField(max_length=50, choices=subject_choices, db_index=True)
-    class_name = models.ForeignKey(Classes, on_delete=models.CASCADE, null=True, blank=True, db_index=True)
-    teacher = models.ManyToManyField(Teacher)
     session = models.ForeignKey(AcademicSession, on_delete=models.CASCADE, null=True, blank=True)
     term = models.ForeignKey(Term, on_delete=models.CASCADE, null=True, blank=True)
+    teachers = models.ManyToManyField('authapp.Teacher', through='SubjectTeacherAssignment', related_name='subjects')
     date_created = models.DateField(auto_now_add=True)
-    
+
     def __str__(self):
-        return f'{self.subject_name} - {self.class_name.class_name if self.class_name else "No Class Assigned"}'
+        return f'{self.subject_name} - {self.session.session_name if self.session else "No Session"} - {self.term.term_name if self.term else "No Term"}'
 
+class SubjectTeacherAssignment(models.Model):
+    """  
+    Assign a Teacher to a Subject Per class
+    """
+    
+    subject = models.ForeignKey(Subjects, on_delete=models.CASCADE, related_name='assignments')
+    teacher = models.ForeignKey('authapp.Teacher', on_delete=models.CASCADE, related_name='assignments')
+    class_name = models.ForeignKey(Classes, on_delete=models.CASCADE, related_name='subject_assignments')
+    session = models.ForeignKey(AcademicSession, on_delete=models.CASCADE)
+    term = models.ForeignKey(Term, on_delete=models.CASCADE)
+    date_assigned = models.DateField(auto_now_add=True)
 
+    def __str__(self):
+        return f'{self.subject.subject_name} - {self.teacher.full_name} - {self.class_name.class_name}'
+    
+    
 class SubjectScore(models.Model):
-    student = models.ForeignKey(Student, on_delete=models.CASCADE)
+    
+    """ 
+    Table for Student of a class scores in a subject Per term and session
+    """
+    
+    student = models.ForeignKey('authapp.Student', on_delete=models.CASCADE)
     class_name = models.ForeignKey(Classes, on_delete=models.CASCADE)
     subject = models.ForeignKey(Subjects, on_delete=models.CASCADE)
     term = models.ForeignKey(Term, on_delete=models.CASCADE)
@@ -156,10 +186,18 @@ class SubjectScore(models.Model):
             else:
                 self.grade = 'F'
                 self.remark = 'Fail'
+        else:
+        # Reset calculated fields if incomplete
+            self.total_ca = None
+            self.total_score = None
+            self.total_score_in_percentage = None
+            self.grade = None
+            self.remark = None
+            
         super().save(*args, **kwargs)
     
 class StudentResults(models.Model):
-    student = models.ForeignKey(Student, on_delete=models.CASCADE)
+    student = models.ForeignKey('authapp.Student', on_delete=models.CASCADE)
     class_name = models.ForeignKey(Classes, on_delete=models.CASCADE)
     subjects = models.ManyToManyField(SubjectScore)
     term = models.ForeignKey(Term, on_delete=models.CASCADE)

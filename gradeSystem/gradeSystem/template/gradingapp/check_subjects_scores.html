@@ -1,0 +1,43 @@
+{% extends "common.html" %}
+{% block title %}Subjects Scores{% endblock title %}
+{% block content %}
+<div class="container mt-5">
+  <h1 class="text-center">Welcome, {{ request.user.get_full_name }}</h1>
+  <!-- <h3 class="text-center">Your Dashboard</h3> -->
+
+  <!-- Subjects and Scores -->
+  <h3 class="text-center mt-5">Subjects and Scores</h3>
+  {% if subjects_scores %}
+    <table class="table table-bordered table-hover mt-4">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Subject</th>
+          <th>First CA</th>
+          <th>Second CA</th>
+          <th>Exam Score</th>
+          <th>Total Score</th>
+          <th>Grade</th>
+          <th>Remark</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for score in subjects_scores %}
+          <tr>
+            <td>{{ forloop.counter }}</td>
+            <td>{{ score.subject.subject_name }}</td>
+            <td>{{ score.first_ca }}</td>
+            <td>{{ score.second_ca }}</td>
+            <td>{{ score.exam_score }}</td>
+            <td>{{ score.total_score }}</td>
+            <td>{{ score.grade }}</td>
+            <td>{{ score.remark }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <p class="text-center mt-4">No scores available yet.</p>
+  {% endif %}
+</div>
+{% endblock content %}

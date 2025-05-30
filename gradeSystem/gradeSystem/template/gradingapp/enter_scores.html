@@ -1,0 +1,53 @@
+{% extends "common.html" %}
+{% block title %}Enter Scores{% endblock title %}
+{% block content %}
+{% load custom_filters %}
+<div class="container mt-5">
+  <div class="text-center">
+    <h1>Enter Scores for {{ subject.subject_name }} - {{ class_name.class_name }}</h1>
+    <p class="text-muted">You can enter scores for First CA, Second CA, or Exam independently.</p>
+  </div>
+
+  <div class="card shadow-lg mt-4">
+    <div class="card-body">
+      <form method="post" action="">
+        {% csrf_token %}
+        <table class="table table-bordered table-hover">
+          <thead class="thead-dark">
+            <tr>
+              <th>#</th>
+              <th>Student Name</th>
+              <th>First CA (20 Marks)</th>
+              <th>Second CA (20 Marks)</th>
+              <th>Exam Score (90 Marks)</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for student in students %}
+            <tr>
+              <td>{{ forloop.counter }}</td>
+              <td>{{ student.full_name }}</td>
+              <td>
+                <input type="number" class="form-control" placeholder="Enter First CA" min="0" max="20" name="first_ca_{{ student.id }}" value="{{ scores|get_item:student.id|default_if_none:'' }}">
+
+              </td>
+              <td>
+                <input type="number" class="form-control" placeholder="Enter Second CA" min="0" max="20" name="second_ca_{{ student.id }}" value="{{ scores|get_item:student.id|default_if_none:'' }}">
+                <!-- <input type="number" name="second_ca_{{ student.id }}" class="form-control" placeholder="Enter Second CA" min="0" max="20" value="{{ student.second_ca|default:'' }}"> -->
+              </td>
+              <td>
+                <input type="number" class="form-control" placeholder="Enter Exam Score" min="0" max="90" name="exam_score_{{ student.id }}" value="{{ scores|get_item:student.id|default_if_none:'' }}">
+                <!-- <input type="number" name="exam_score_{{ student.id }}" class="form-control" placeholder="Enter Exam Score" min="0" max="90" value="{{ student.exam_score|default:'' }}"> -->
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+        <div class="text-center mt-4">
+          <button type="submit" class="btn btn-primary btn-lg">Submit Scores</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock content %}
