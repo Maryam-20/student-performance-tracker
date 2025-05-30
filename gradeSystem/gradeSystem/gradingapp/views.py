@@ -181,7 +181,7 @@ class BroadsheetView(LoginRequiredMixin, View):
      
     """
     
-    def get(self, request):
+    def get(self, request, subject_id=None, class_id=None):
         # Get filter parameters from the request
         class_name_id = request.GET.get('class_name')
         term_id = request.GET.get('term')

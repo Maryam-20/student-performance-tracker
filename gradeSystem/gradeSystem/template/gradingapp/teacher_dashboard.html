@@ -27,6 +27,7 @@
             <th>Subject</th>
             <th>Class</th>
             <th>Actions</th>
+            <th>View Broadsheet</th>
           </tr>
         </thead>
         <tbody>
@@ -38,6 +39,11 @@
               <td>
                 <a href="{% url 'enter_scores' assignment.subject.id assignment.class_name.id %}" class="btn btn-primary btn-sm">
                   Enter Scores
+                </a>
+              </td>
+              <td>
+                <a href="{% url 'broadsheet' %}" class="btn btn-primary btn-sm">
+                  View Broadsheet
                 </a>
               </td>
             </tr>
