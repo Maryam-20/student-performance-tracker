@@ -26,6 +26,7 @@ urlpatterns = [
     path(f'{base_url}/admin/', admin.site.urls),
     path(f'{base_url}/auth/', include('gradeSystem.authapp.urls')),
     path(f'{base_url}/grading/', include('gradeSystem.gradingapp.urls')),
+    path(f'{base_url}/performance/', include('gradeSystem.performanceTrackingApp.urls')),
     path(f'{base_url}/auth/', include('django.contrib.auth.urls')),
     path(f'{base_url}/auth/register/$',SignupView.as_view(), name='signup'),
     path(f'{base_url}/auth/logout/', CustomLogoutView.as_view(), name='logout'),

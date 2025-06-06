@@ -1,0 +1,91 @@
+{% extends "common.html" %}
+{% block title %}My Performance Chart{% endblock title %}
+{% block content %}
+<div class="container mt-5">
+  <h2 class="mb-4 text-center">Academic Performance for {{ student.full_name }}</h2>
+  <div class="mb-3 text-center text-muted">
+    This chart shows your academic progress (average percentage) across all terms and sessions.
+  </div>
+  <canvas id="studentChart" height="100"></canvas>
+  <div id="no-data-message" class="alert alert-info mt-4 text-center" style="display:none;">
+    No performance data available yet.
+  </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script id="performance-data" type="application/json">
+  {{ performance_data|default:"[]"|safe }}
+</script>
+
+<!-- For Testing -->
+ <!-- <script id="performance-data" type="application/json">
+  [
+  {"session": "2024/2025", "term": "First Term", "score": 79.6},
+  {"session": "2024/2025", "term": "Second Term", "score": 85.2},
+  {"session": "2024/2025", "term": "Third Term", "score": 90.0}
+]
+</script> -->
+<script>
+  const performanceData = JSON.parse(document.getElementById('performance-data').textContent);
+  if (!performanceData.length) {
+    document.getElementById('studentChart').style.display = 'none';
+    document.getElementById('no-data-message').style.display = 'block';
+  } else {
+    const labels = performanceData.map(item => `${item.session} ${item.term}`);
+    const data = performanceData.map(item => item.score);
+
+    new Chart(document.getElementById('studentChart'), {
+      type: 'line',
+      data: {
+        labels: labels,
+        datasets: [{
+          label: 'Average Score (%)',
+          data: data,
+          fill: false,
+          borderColor: 'blue',
+          backgroundColor: 'rgba(0, 123, 255, 0.2)',
+          tension: 0.2,
+          pointRadius: 5,
+          pointBackgroundColor: 'blue'
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          title: {
+            display: true,
+            text: 'Academic Progress Over Time',
+            font: { size: 18 }
+          },
+          tooltip: {
+            callbacks: {
+              label: function(context) {
+                return ` ${context.parsed.y}% in ${context.label}`;
+              }
+            }
+          },
+          legend: {
+            display: true,
+            position: 'top'
+          }
+        },
+        scales: {
+          x: {
+            title: {
+              display: true,
+              text: 'Session & Term'
+            }
+          },
+          y: {
+            beginAtZero: true,
+            max: 100,
+            title: {
+              display: true,
+              text: 'Average Score (%)'
+            }
+          }
+        }
+      }
+    });
+  }
+</script>
+{% endblock content %}

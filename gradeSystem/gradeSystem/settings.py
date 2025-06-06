@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     # Third party apps
     'gradeSystem.authapp',
     'gradeSystem.gradingapp',
+    'gradeSystem.performanceTrackingApp',
     
     # Installed apps
     'django_forms_bootstrap',

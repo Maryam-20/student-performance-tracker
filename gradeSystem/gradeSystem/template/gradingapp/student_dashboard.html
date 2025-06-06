@@ -36,6 +36,7 @@
       <a href="#" class="btn btn-primary" id="no-result-btn">Check Results</a>
     {% endif %}
     <a href="{% url "student_scores_and_result" %}" class="btn btn-secondary">Check Scores</a>
+    <a href="{% url "student_performance" student.id %}" class="btn btn-secondary">My Performance Chart</a>
   </div>
   <script>
     document.addEventListener('DOMContentLoaded', function() {
