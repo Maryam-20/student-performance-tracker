@@ -1,0 +1,107 @@
+<!-- filepath: c:\performance_tracker\gradeSystem\gradeSystem\template\gradingapp\student_scores_and_result.html -->
+{% extends "common.html" %}
+{% block title %}My Scores & Result{% endblock title %}
+{% block content %}
+{% load custom_filters %}
+<div class="container mt-5">
+
+  <h2 style="text-align: center; margin-bottom:25px;">MY RESULT</h2>
+  <!-- Upper Table: Student/Class Info -->
+  <table class="table table-bordered mb-4">
+    <tr>
+      <th>Student Name</th>
+      <td>{{ student.full_name }}</td>
+      <th>Gender</th>
+      <td>{{ student.gender }}</td>
+    </tr>
+    <tr>
+      <th>Class</th>
+      <td>{{ student.grade_level }}</td>
+      <th>Form Class</th>
+      <td>{{ class_name.class_name }}</td>
+    </tr>
+    <tr>
+      <th>Session</th>
+      <td>{{ session.session_name }}</td>
+      <th>Term</th>
+      <td>{{ term.term_name }}</td>
+    </tr>
+    <tr>
+      <th>Total Students in Class</th>
+      <td colspan="3">{{ total_students_in_class }}</td>
+    </tr>
+  </table>
+  <!-- <h2>Subject Scores for {{ class_name.class_name }} ({{ term.term_name }}, {{ session.session_name }})</h2> -->
+  <table class="table table-bordered">
+    <thead>
+      <tr>
+        <th>Subject</th>
+        <th>First CA</th>
+        <th>Second CA</th>
+        <th>Exam</th>
+        <th>Total</th>
+        <th>Grade</th>
+        <th>Remark</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for subject in subjects_offered %}
+        {% with score=subject_scores|get_by_subject:subject.id %}
+        <tr>
+          <td>{{ subject.subject_name }}</td>
+          <td>
+            {% for s in subject_scores %}
+              {% if s.subject.id == subject.id %}{{ s.first_ca|default:"-" }}{% endif %}
+            {% endfor %}
+          </td>
+          <td>
+            {% for s in subject_scores %}
+              {% if s.subject.id == subject.id %}{{ s.second_ca|default:"-" }}{% endif %}
+            {% endfor %}
+          </td>
+          <td>
+            {% for s in subject_scores %}
+              {% if s.subject.id == subject.id %}{{ s.exam_score|default:"-" }}{% endif %}
+            {% endfor %}
+          </td>
+          <td>
+            {% for s in subject_scores %}
+              {% if s.subject.id == subject.id %}{{ s.total_score|default:"-" }}{% endif %}
+            {% endfor %}
+          </td>
+          <td>
+            {% for s in subject_scores %}
+              {% if s.subject.id == subject.id %}{{ s.grade|default:"-" }}{% endif %}
+            {% endfor %}
+          </td>
+          <td>
+            {% for s in subject_scores %}
+              {% if s.subject.id == subject.id %}{{ s.remark|default:"-" }}{% endif %}
+            {% endfor %}
+          </td>
+        </tr>
+        {% endwith %}
+      {% empty %}
+        <tr><td colspan="7" class="text-center">No scores entered yet.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <hr>
+  <h3>Student Result Summary</h3>
+  {% if student_result %}
+    <table class="table table-striped">
+      <tr><th>Total Score Obtainable</th><td>{{ student_result.total_score_obtainable|default:"-" }}</td></tr>
+      <tr><th>Total Score in All Subjects</th><td>{{ student_result.total_score_in_all_subjects|default:"-" }}</td></tr>
+      <tr><th>Average Score</th><td>{{ student_result.average_score|floatformat:2|default:"-" }}</td></tr>
+      <tr><th>Average Score (%)</th><td>{{ student_result.average_score_in_percentage|floatformat:2|default:"-" }}</td></tr>
+      <tr><th>Position</th><td>{{ student_result.class_position|default:"-" }}</td></tr>
+      <tr><th>Remark</th><td>{{ student_result.remark|default:"-" }}</td></tr>
+      <tr><th>Class Teacher's Comment</th><td>{{ student_result.class_teacher_comment|default:"-" }}</td></tr>
+      <tr><th>Principal's Comment</th><td>{{ student_result.principal_comment|default:"-" }}</td></tr>
+    </table>
+  {% else %}
+    <div class="alert alert-info">Result not yet computed. Please check back later.</div>
+  {% endif %}
+</div>
+{% endblock content %}

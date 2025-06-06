@@ -123,6 +123,7 @@ class SubjectTeacherAssignment(models.Model):
     subject = models.ForeignKey(Subjects, on_delete=models.CASCADE, related_name='assignments')
     teacher = models.ForeignKey('authapp.Teacher', on_delete=models.CASCADE, related_name='assignments')
     class_name = models.ForeignKey(Classes, on_delete=models.CASCADE, related_name='subject_assignments')
+    # form_class = models.ForeignKey(Classes, on_delete=models.CASCADE, related_name='subject_assignments')
     session = models.ForeignKey(AcademicSession, on_delete=models.CASCADE)
     term = models.ForeignKey(Term, on_delete=models.CASCADE)
     date_assigned = models.DateField(auto_now_add=True)
@@ -139,6 +140,7 @@ class SubjectScore(models.Model):
     
     student = models.ForeignKey('authapp.Student', on_delete=models.CASCADE)
     class_name = models.ForeignKey(Classes, on_delete=models.CASCADE)
+    # form_class = models.ForeignKey(Classes, on_delete=models.CASCADE)
     subject = models.ForeignKey(Subjects, on_delete=models.CASCADE)
     term = models.ForeignKey(Term, on_delete=models.CASCADE)
     session = models.ForeignKey(AcademicSession, on_delete=models.CASCADE)
@@ -212,13 +214,23 @@ class StudentResults(models.Model):
     principal_comment = models.TextField(null=True, blank=True)
     date_created = models.DateField(auto_now_add=True)
 
+
+    @property
+    def subject_scores_details(self):
+        # print(self.subjects.all())
+        return self.subjects.all()
+    
     def __str__(self):
         return f'{self.student.full_name} - {self.average_score_in_percentage} - {self.term.term_name}'
     
     def save(self, *args, **kwargs):
-        if self.subjects.exists():
-            self.total_score_obtainable = 130 * self.subjects.count()
-            self.total_score_in_all_subjects = sum([subject.total_score for subject in self.subjects.all()])
-            self.average_score= self.total_score_in_all_subjects / self.total_score_obtainable
-            self.average_score_in_percentage = self.average_score  * 100
+        if self.pk:  # Only compute after object has been saved and has a primary key
+            if self.subjects.exists():
+                self.total_score_obtainable = 130 * self.subjects.count()
+                self.total_score_in_all_subjects = sum(subject.total_score for subject in self.subjects.all())
+                self.average_score = self.total_score_in_all_subjects / self.total_score_obtainable
+                self.average_score_in_percentage = self.average_score * 100
         super().save(*args, **kwargs)
+
+        
+    

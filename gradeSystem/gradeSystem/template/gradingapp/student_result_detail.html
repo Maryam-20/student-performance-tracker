@@ -1,0 +1,45 @@
+{% extends "common.html" %}
+{% block title %}Student Result{% endblock title %}
+{% block content %}
+<div class="container mt-5">
+  <h2>Result for {{ result.student.full_name }} ({{ result.class_name.class_name }})</h2>
+  <p><strong>Term:</strong> {{ result.term.term_name }} | <strong>Session:</strong> {{ result.session.session_name }}</p>
+  <table class="table table-bordered">
+    <thead>
+      <tr>
+        <th>Subject</th>
+        <th>First CA</th>
+        <th>Second CA</th>
+        <th>Exam</th>
+        <th>Total</th>
+        <th>Grade</th>
+        <th>Remark</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for subject_score in result.subject_scores_details %}
+      <tr>
+        <td>{{ subject_score.subject.subject_name }}</td>
+        <td>{{ subject_score.first_ca|default:"-" }}</td>
+        <td>{{ subject_score.second_ca|default:"-" }}</td>
+        <td>{{ subject_score.exam_score|default:"-" }}</td>
+        <td>{{ subject_score.total_score|default:"-" }}</td>
+        <td>{{ subject_score.grade|default:"-" }}</td>
+        <td>{{ subject_score.remark|default:"-" }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <h4>Summary</h4>
+  <ul>
+    <li><strong>Total Score Obtainable:</strong> {{ result.total_score_obtainable|default:"-" }}</li>
+    <li><strong>Total Score in All Subjects:</strong> {{ result.total_score_in_all_subjects|default:"-" }}</li>
+    <li><strong>Average Score:</strong> {{ result.average_score|floatformat:2|default:"-" }}</li>
+    <li><strong>Average Score (%):</strong> {{ result.average_score_in_percentage|floatformat:2|default:"-" }}</li>
+    <li><strong>Position:</strong> {{ result.class_position|default:"-" }}</li>
+    <li><strong>Remark:</strong> {{ result.remark|default:"-" }}</li>
+    <li><strong>Class Teacher's Comment:</strong> {{ result.class_teacher_comment|default:"-" }}</li>
+    <li><strong>Principal's Comment:</strong> {{ result.principal_comment|default:"-" }}</li>
+  </ul>
+</div>
+{% endblock content %}

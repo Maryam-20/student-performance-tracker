@@ -18,6 +18,38 @@ grade_level_choices = (("Year 7", "Year 7"),
                  ("Subject Teacher", "Subject Teacher"),
                  )
 
+class_name_choices = (("Year 7", "Year 7"),
+                 ("Year 8", "Year 8"),
+                 ("Year 9", "Year 9"),
+                 ("Year 10", "Year 10"),
+                 ("Year 11", "Year 11"),
+                 ("Year 12", "Year 12"),
+                 ("Subject Teacher", "Subject Teacher"),
+                 )
+
+form_class_choices = (("7A", "7A"),
+                      ("7B", "7B"),
+                      ("7C", "7C"),
+                      ("7D", "7D"),
+                      ("7E", "7E"),
+                      ("8A", "8A"),
+                      ("8B", "8B"),
+                      ("8C", "8C"),
+                      ("8D", "8D"),
+                      ("8E", "8E"),
+                      ("9A", "9A"),
+                      ("9B", "9B"),
+                      ("9C", "9C"),
+                      ("9D", "9D"),
+                      ("9E", "9E"),
+                      ("10A", "10A"),
+                      ("10B", "10B"),
+                      ("10C", "10C"),
+                      ("10D", "10D"),
+                      ("10E", "10E"),
+                      ("ST", "ST"),
+                 )
+
 subject_choices = (("Mathematics", "Mathematics"),
                      ("English Language", "English Language"),
                    ("History", "History"),
@@ -119,6 +151,7 @@ class Student(models.Model):
     full_name = models.CharField(max_length=200, null=False, blank=False)
     gender = models.CharField(choices=gender_choices, max_length=10, null=False, blank=False)
     grade_level = models.CharField(choices=grade_level_choices, max_length=50, null=True, blank=False) #Current grade level
+    # class_name = models.CharField(choices=grade_level_choices, max_length=50, null=True, blank=False) #Current class 
     class_name = models.ForeignKey(
             Classes,
             on_delete=models.CASCADE,
@@ -126,6 +159,13 @@ class Student(models.Model):
             null=False,
             
         )
+    # form_class = models.ForeignKey(
+    #         Classes,
+    #         on_delete=models.CASCADE,
+    #         related_name="students",
+    #         null=False,
+            
+    #     )
     phone_number = models.CharField(max_length=15, null=True, blank=True)
     address = models.CharField(max_length=200, null=True, blank=True)
     date_of_birth = models.DateField(null=True, blank=True)
@@ -179,7 +219,7 @@ class Teacher(models.Model):
 
 
     def __str__(self):
-        return f"{self.full_name} - {self.subject_taught}"
+        return f"{self.full_name} - {self.subject_taught} - {self.class_teacher}"
     
 
 @receiver(post_save, sender=AllUser)
@@ -201,6 +241,7 @@ def create_or_update_user_profile(sender, instance, created, **kwargs):
                 user=instance,
                 full_name=instance.get_full_name(),
                 class_name=default_class,  # Assign the default class
+                # 'form_class': default_class,
                 
             )
     else:
@@ -219,6 +260,7 @@ def create_or_update_user_profile(sender, instance, created, **kwargs):
             # Create a Student profile if it doesn't already exist
             default_class, _ = Classes.objects.get_or_create(
                 class_name="Default Class",
+                # 'form_class': default_class,
                 defaults={'no_of_students': 0, 'date_created': now()}
             )
             Student.objects.get_or_create(
@@ -226,6 +268,7 @@ def create_or_update_user_profile(sender, instance, created, **kwargs):
                 defaults={
                     'full_name': instance.get_full_name(),
                     'class_name': default_class,
+                    # 'form_class': default_class,
                 },
             )
 
