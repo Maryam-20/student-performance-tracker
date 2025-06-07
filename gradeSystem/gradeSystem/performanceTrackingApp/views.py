@@ -110,3 +110,16 @@ class AnalyticsReportView(LoginRequiredMixin, View):
             'pass_rate': round(pass_rate, 2),
             'fail_rate': round(fail_rate, 2),
         })
+        
+class UnderperformingStudentsAlertView(LoginRequiredMixin, View):
+    def get(self, request):
+        # You can filter by session/term/class if needed
+        threshold = 40  # Pass mark
+        underperformers = StudentResults.objects.filter(
+            average_score_in_percentage__lt=threshold
+        ).select_related('student', 'class_name', 'term', 'session')
+
+        return render(request, 'performanceTrackingApp/underperforming_alerts.html', {
+            'underperformers': underperformers,
+            'threshold': threshold,
+        })
