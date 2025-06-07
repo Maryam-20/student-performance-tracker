@@ -1,0 +1,68 @@
+{% extends "common.html" %}
+{% block title %}Academic Analytics Report{% endblock title %}
+{% block content %}
+<div class="container mt-5">
+  <h2 class="mb-4 text-center">Academic Analytics & Insights</h2>
+
+  <div class="row mb-4">
+    <div class="col-md-6">
+      <div class="card p-3">
+        <h5>Top 5 Students</h5>
+        <ol>
+          {% for s in top_students %}
+            <li>{{ s.student__full_name }} - {{ s.avg_score|floatformat:2 }}%</li>
+          {% empty %}
+            <li>No data available.</li>
+          {% endfor %}
+        </ol>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="card p-3">
+        <h5>Subject Performance</h5>
+        <p><strong>Highest:</strong> {{ highest_subject.subject__subject_name }} ({{ highest_subject.avg_score|floatformat:2 }}%)</p>
+        <p><strong>Lowest:</strong> {{ lowest_subject.subject__subject_name }} ({{ lowest_subject.avg_score|floatformat:2 }}%)</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="card p-3 mb-4">
+    <h5>Class Averages per Session/Term</h5>
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <th>Class</th>
+          <th>Session</th>
+          <th>Term</th>
+          <th>Average (%)</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for c in class_averages %}
+        <tr>
+          <td>{{ c.class_name__class_name }}</td>
+          <td>{{ c.session__session_name }}</td>
+          <td>{{ c.term__term_name }}</td>
+          <td>{{ c.avg_score|floatformat:2 }}</td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="4">No data available.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <div class="row">
+    <div class="col-md-6">
+      <div class="alert alert-success">
+        <strong>Pass Rate:</strong> {{ pass_rate }}%
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="alert alert-danger">
+        <strong>Fail Rate:</strong> {{ fail_rate }}%
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock content %}

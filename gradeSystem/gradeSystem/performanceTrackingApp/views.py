@@ -1,5 +1,6 @@
 from django.shortcuts import render
 import json
+from django.db.models import Avg, Count, Q
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views import View
 from gradeSystem.authapp.models import *
@@ -65,3 +66,47 @@ class ClassPerformanceView(LoginRequiredMixin, View):
             'avg_per_term': json.dumps(avg_per_term),  # <-- ensure JSON string
             'selected_class_id': int(class_id) if class_id else None,
         })  
+   
+   
+        
+class AnalyticsReportView(LoginRequiredMixin, View):
+    def get(self, request):
+        # Top 5 students by average score
+        top_students = StudentResults.objects.values(
+            'student__full_name'
+        ).annotate(
+            avg_score=Avg('average_score_in_percentage')
+        ).order_by('-avg_score')[:5]
+
+        # Subjects with highest and lowest average scores
+        subject_averages = SubjectScore.objects.values(
+            'subject__subject_name'
+        ).annotate(
+            avg_score=Avg('total_score')
+        ).order_by('-avg_score')
+
+        highest_subject = subject_averages.first() if subject_averages else None
+        lowest_subject = subject_averages.last() if subject_averages else None
+
+        # Class averages per session/term
+        class_averages = StudentResults.objects.values(
+            'class_name__class_name', 'session__session_name', 'term__term_name'
+        ).annotate(
+            avg_score=Avg('average_score_in_percentage')
+        ).order_by('class_name__class_name', 'session__session_name', 'term__term_name')
+
+        # Pass/fail rates (assuming pass mark is 40%)
+        total_results = StudentResults.objects.count()
+        passed = StudentResults.objects.filter(average_score_in_percentage__gte=40).count()
+        failed = total_results - passed
+        pass_rate = (passed / total_results * 100) if total_results else 0
+        fail_rate = (failed / total_results * 100) if total_results else 0
+
+        return render(request, 'performanceTrackingApp/analytics_report.html', {
+            'top_students': top_students,
+            'highest_subject': highest_subject,
+            'lowest_subject': lowest_subject,
+            'class_averages': class_averages,
+            'pass_rate': round(pass_rate, 2),
+            'fail_rate': round(fail_rate, 2),
+        })
