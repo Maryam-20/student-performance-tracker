@@ -1,5 +1,6 @@
 .venv/
 .env
+app.yaml
 __pycache__/
 *.pyc
 migrations/
