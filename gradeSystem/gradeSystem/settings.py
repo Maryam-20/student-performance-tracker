@@ -104,6 +104,17 @@ WSGI_APPLICATION = 'gradeSystem.wsgi.application'
 #         'PASSWORD': os.getenv('POSTGRES_PASSWORD'),
 #     }
 # }
+# Production DB
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.getenv('DB_NAME'),
+        'USER': os.getenv('DB_USER'),
+        'HOST': os.getenv('DB_HOST'),
+        'PORT': os.getenv('DB_PORT'),
+        'PASSWORD': os.getenv('DB_PASSWORD'),
+    }
+}
 
 # For Production
 # APPENGINE_URL = os.getenv('APPENGINE_URL')
