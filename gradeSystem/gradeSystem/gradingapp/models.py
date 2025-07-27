@@ -31,20 +31,20 @@ class Term(models.Model):
         ('Second Term', 'Second Term'),
         ('Third Term', 'Third Term'),
     )
-    term_name = models.CharField(max_length=20, choices=term_choices, unique=True)
+    term_name = models.CharField(max_length=20, choices=term_choices)
     start_date = models.DateField()
     end_date = models.DateField()
     session = models.ForeignKey(AcademicSession, on_delete=models.CASCADE)
     
     class Meta:
-        unique_together = ('term_name', 'session')
+        unique_together = ('session')
 
     def __str__(self):
         return f'{self.session.session_name} - {self.get_term_name_display()}'
 
 
 class Classes(models.Model):
-    class_name = models.CharField(max_length=50, unique=True, db_index=True) #THIS SHOULDN'T BE UNIQUE
+    class_name = models.CharField(max_length=50, db_index=True) #THIS SHOULDN'T BE UNIQUE
     class_teacher = models.ForeignKey('authapp.Teacher', on_delete=models.CASCADE, null=True, blank=True, db_index=True)
     no_of_students = models.IntegerField(default=0)
     session = models.ForeignKey(AcademicSession, on_delete=models.CASCADE, null=True, blank=True)
@@ -208,7 +208,7 @@ class StudentResults(models.Model):
     total_score_in_all_subjects = models.FloatField(null=True, blank=True) #Addition of all subject total scores
     average_score = models.FloatField(null=True, blank=True) #total_score_in_all_subjects / total_score_obtainable
     average_score_in_percentage = models.FloatField(null=True, blank=True) #average_score * 100
-    class_position = models.CharField(null=True, blank=True)
+    class_position = models.CharField( max_length=20, null=True, blank=True)
     remark = models.CharField(max_length=100, null=True, blank=True)
     class_teacher_comment = models.TextField(null=True, blank=True)
     principal_comment = models.TextField(null=True, blank=True)
