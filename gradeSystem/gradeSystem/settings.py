@@ -106,11 +106,11 @@ WSGI_APPLICATION = 'gradeSystem.wsgi.application'
 # }
 
 # For Production
-APPENGINE_URL = os.getenv('APPENGINE_URL')
+# APPENGINE_URL = os.getenv('APPENGINE_URL')
 
-DATABASES = {
-    'default': dj_database_url.config(default=os.getenv('DATABASE_URL'))
-}
+# DATABASES = {
+#     'default': dj_database_url.config(default=os.getenv('DATABASE_URL'))
+# }
 
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
