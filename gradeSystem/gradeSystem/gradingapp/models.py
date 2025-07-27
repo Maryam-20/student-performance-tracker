@@ -36,8 +36,8 @@ class Term(models.Model):
     end_date = models.DateField()
     session = models.ForeignKey(AcademicSession, on_delete=models.CASCADE)
     
-    class Meta:
-        unique_together = ('session')
+    # class Meta:
+    #     unique_together = ('session')
 
     def __str__(self):
         return f'{self.session.session_name} - {self.get_term_name_display()}'
